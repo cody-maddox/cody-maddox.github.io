@@ -31,33 +31,27 @@ Images were compressed at K = 3, 6, 12, 24, and 48 clusters using both loss func
 
 ### Parrots — L2 Loss
 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-
-![K=3]({{ '/assets/images/parrots_K3_L2.png' | relative_url }})
-![K=12]({{ '/assets/images/parrots_K12_L2.png' | relative_url }})
-![K=48]({{ '/assets/images/parrots_K48_L2.png' | relative_url }})
-
+  <img src="{{ '/assets/images/parrots_K3_L2.png' | relative_url }}" alt="K=3">
+  <img src="{{ '/assets/images/parrots_K12_L2.png' | relative_url }}" alt="K=12">
+  <img src="{{ '/assets/images/parrots_K48_L2.png' | relative_url }}" alt="K=48">
 </div>
 
 *Left to right: K=3, K=12, K=48. More clusters preserve finer color detail.*
 
 ### Parrots — L1 Loss
 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-
-![K=3]({{ '/assets/images/parrots_K3_L1.png' | relative_url }})
-![K=12]({{ '/assets/images/parrots_K12_L1.png' | relative_url }})
-![K=48]({{ '/assets/images/parrots_K48_L1.png' | relative_url }})
-
+  <img src="{{ '/assets/images/parrots_K3_L1.png' | relative_url }}" alt="K=3">
+  <img src="{{ '/assets/images/parrots_K12_L1.png' | relative_url }}" alt="K=12">
+  <img src="{{ '/assets/images/parrots_K48_L1.png' | relative_url }}" alt="K=48">
 </div>
 
 *L1 loss produces subtly different color palettes — median centroids tend to select more "typical" colors.*
 
 ### Football Network — L2 Loss
 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-
-![K=3]({{ '/assets/images/football_K3_L2.png' | relative_url }})
-![K=12]({{ '/assets/images/football_K12_L2.png' | relative_url }})
-![K=48]({{ '/assets/images/football_K48_L2.png' | relative_url }})
-
+  <img src="{{ '/assets/images/football_K3_L2.png' | relative_url }}" alt="K=3">
+  <img src="{{ '/assets/images/football_K12_L2.png' | relative_url }}" alt="K=12">
+  <img src="{{ '/assets/images/football_K48_L2.png' | relative_url }}" alt="K=48">
 </div>
 
 ## Key Observations
