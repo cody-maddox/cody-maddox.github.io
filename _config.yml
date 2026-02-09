@@ -5,6 +5,11 @@ url: "https://cody-maddox.github.io"
 
 # No remote theme — using custom layouts in _layouts/
 
+# Tell kramdown to leave $$ blocks alone so MathJax can render them
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
+
 # Collections
 collections:
   projects:
