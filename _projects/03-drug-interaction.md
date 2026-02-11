@@ -1,15 +1,15 @@
 ---
 title: "Drug-Drug Interaction Extraction"
-summary: "Relation extraction system using BERT with entity markers to classify drug-drug interactions from the DDI Corpus 2013, handling 5 interaction types."
+summary: "Fine-tuned BERT for relation extraction to classify drug-drug interactions from the DDI Corpus 2013, achieving 0.79 macro F1 across 5 interaction types."
 tags: [NLP, BERT, Relation Extraction, Biomedical, Python]
 order: 3
 ---
 
 ## Overview
 
-Drug-drug interactions (DDIs) are a major cause of adverse drug events. Manually curating DDI databases is slow and incomplete. This project automates the extraction of DDI relations from biomedical text using a BERT-based classification approach with entity markers.
+Drug-drug interactions (DDIs) are a major cause of adverse drug events, and manually curating DDI databases is slow and incomplete. This project fine-tunes BERT for relation extraction to classify drug-drug interactions from biomedical text. Given a sentence containing two drug mentions, the model predicts whether the drugs interact and what type of interaction is described — distinguishing between pharmacokinetic mechanisms, clinical effects, medical advice, and generic interactions.
 
-Given a sentence containing two drug mentions, the model classifies the relationship into one of five categories.
+This builds on prior sequence classification (CAD Classification) and token classification (Clinical NER) work by combining both concepts: classifying the *relationship* between entities within a sentence.
 
 ## Task Definition
 
@@ -23,21 +23,18 @@ Given a sentence containing two drug mentions, the model classifies the relation
 
 ## Dataset: DDI Corpus 2013
 
-- **Sources:** DrugBank drug descriptions + MedLine biomedical abstracts
-- **Format:** XML files with sentence text, entity annotations, and pairwise relation labels
-- **Training:** 27,792 samples (26,005 DrugBank + 1,787 MedLine)
-- **Test:** 5,716 samples (5,265 DrugBank + 451 MedLine)
-- **Class imbalance:** 85.5% of training pairs are negative (no interaction)
+A SemEval shared task benchmark sourced from two domains:
 
-## Pipeline
+| Split | Samples | DrugBank | MedLine |
+|-------|---------|----------|---------|
+| Train | 27,792 | 26,005 | 1,787 |
+| Test | 5,716 | 5,265 | 451 |
 
-### 1. XML Parsing
+The dataset is heavily imbalanced — 85.5% of all entity pairs have no interaction. This made **macro F1** the primary evaluation metric rather than accuracy, since a model predicting "negative" for every pair would achieve 85.5% accuracy while being useless.
 
-Each XML file contains sentences with entity and pair annotations. The parser extracts one sample per entity pair — building an entity lookup by ID, then extracting every `<pair>` element with its relation label.
+## Entity Marker Strategy
 
-### 2. Entity Marker Insertion
-
-To tell BERT which two drugs we're asking about, markers are inserted directly into the sentence text:
+A single sentence can contain multiple drug pairs, each with a different interaction label. To tell BERT which pair is being classified, entity markers are inserted directly into the text:
 
 **Before:**
 ```
@@ -49,25 +46,58 @@ Milk, milk products, and calcium-rich foods may impair the absorption of EMCYT.
 Milk, milk products, and [E1]calcium[/E1]-rich foods may impair the absorption of [E2]EMCYT[/E2].
 ```
 
-Markers are inserted **right-to-left** (rightmost entity first) so that character offsets remain valid after insertion.
+The four markers (`[E1]`, `[/E1]`, `[E2]`, `[/E2]`) are registered as special tokens in BERT's vocabulary so the tokenizer treats each as a single, indivisible token. The embedding matrix is resized from 30,522 to 30,526 to accommodate them, and they learn meaningful representations during fine-tuning. Markers are inserted **right-to-left** (rightmost entity first) to preserve character offsets.
 
-### 3. Special Token Registration
+## Model & Training
 
-The four markers (`[E1]`, `[/E1]`, `[E2]`, `[/E2]`) are registered as special tokens in the tokenizer. This ensures they are treated as single, indivisible tokens rather than being split into characters. The model's embedding layer is resized to accommodate the new vocabulary entries.
+- **Base model:** `bert-base-uncased` (110M parameters)
+- **Classification head:** Linear layer on the `[CLS]` token (768 → 5 classes)
+- **Max sequence length:** 256 tokens
+- **Learning rate:** 2e-5 with weight decay of 0.01
+- **Epochs:** 3 with macro F1 as the model selection metric
+- **Device:** Apple M2 (MPS)
 
-### 4. Classification
+## Results
 
-The marked sentences are tokenized, padded to a max length of 256, and fed through BERT for sequence classification into the 5 relation types.
+### Overall Metrics
 
-## Key Design Decisions
+| Metric | Score |
+|--------|-------|
+| **Macro F1** | **0.79** |
+| Weighted F1 | 0.94 |
+| Accuracy | 0.94 |
 
-| Decision | Rationale |
-|----------|-----------|
-| Entity markers over entity embeddings | Simpler approach; directly encodes entity position in the input text |
-| Right-to-left insertion | Avoids offset invalidation when inserting markers |
-| First span only for multi-span entities | Covers the vast majority of cases; simplifies offset handling |
-| Special token registration | Prevents markers from being tokenized as individual characters |
+### Per-Class F1 Across Epochs
 
-## Tools & Libraries
+| Class | Epoch 1 | Epoch 2 | Epoch 3 | Trend |
+|-------|---------|---------|---------|-------|
+| negative | 0.97 | 0.97 | 0.98 | Stable — dominant class, easy to learn |
+| mechanism | 0.71 | 0.80 | 0.80 | Large improvement epoch 1→2, then plateau |
+| effect | 0.75 | 0.80 | 0.80 | Improved then stable |
+| advise | 0.87 | 0.84 | 0.85 | Consistently strong |
+| int | 0.51 | 0.51 | 0.50 | Stuck — insufficient training data (189 samples) |
 
-Python, PyTorch, Hugging Face Transformers, xml.etree.ElementTree, pandas
+### Inference Examples
+
+| Input | Prediction | Confidence |
+|-------|------------|------------|
+| "[E1]Aspirin[/E1] may decrease the effects of [E2]probenecid[/E2]." | effect | 99.80% |
+| "[E1]Warfarin[/E1] should not be taken with [E2]aspirin[/E2]." | advise | 99.76% |
+| "The patient was prescribed [E1]metformin[/E1] and [E2]lisinopril[/E2]." | negative | 99.97% |
+
+### Key Takeaways
+
+- **`advise` (0.85 F1) was the strongest positive class** — distinctive language patterns like "should not be used with" and "is not recommended" made it easier to classify.
+- **`mechanism` and `effect` both reached 0.80 F1** — the two largest positive classes showed a notable jump from epoch 1 to epoch 2 before plateauing.
+- **`int` remained stuck at ~0.50 F1** — only 189 training samples (0.7% of data) with a vague definition. This is a data limitation, not a model limitation.
+- **Accuracy (0.94) is inflated by the dominant negative class** — macro F1 (0.79) is the more meaningful metric for this task.
+
+## Potential Improvements
+
+- Class weighting or oversampling to boost minority class performance
+- Domain-specific pretrained models (BioBERT, PubMedBERT)
+- Merging the `int` class into a broader "other interaction" category
+
+## Tools
+
+Python, PyTorch, HuggingFace Transformers, scikit-learn, pandas, HuggingFace Datasets
