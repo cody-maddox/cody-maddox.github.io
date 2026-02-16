@@ -2,7 +2,7 @@
 title: "MRI Image Reconstruction via Compressed Sensing"
 summary: "Reconstructing a 50x50 MRI image from incomplete, noisy measurements using Lasso and Ridge regression with cross-validated regularization tuning."
 tags: [Compressed Sensing, Lasso, Ridge, Medical Imaging, Python]
-order: 8
+order: 9
 ---
 
 ## Overview

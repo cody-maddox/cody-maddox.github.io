@@ -2,7 +2,7 @@
 title: "K-Means Image Compression"
 summary: "Custom K-Means clustering implementation applied to image compression, comparing L1 and L2 loss functions across different K values to analyze the quality-compression tradeoff."
 tags: [Clustering, K-Means, Image Processing, Python]
-order: 6
+order: 7
 ---
 
 ## Overview

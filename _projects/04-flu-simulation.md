@@ -2,7 +2,7 @@
 title: "Classroom Flu Simulation"
 summary: "Stochastic epidemiological model simulating pandemic flu transmission in a 61-student classroom using EpiModel in R, with and without immunity scenarios across 1,000 trials."
 tags: [Simulation, Epidemiology, R, Statistics]
-order: 4
+order: 5
 ---
 
 ## Overview

@@ -2,7 +2,7 @@
 title: "Eigenfaces & ISOMAP Dimensionality Reduction"
 summary: "PCA-based eigenface decomposition for facial recognition combined with ISOMAP manifold learning, including systematic epsilon tuning and comparison against PCA baselines."
 tags: [PCA, ISOMAP, Dimensionality Reduction, Computer Vision, Python]
-order: 7
+order: 8
 ---
 
 ## Overview

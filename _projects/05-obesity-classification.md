@@ -2,7 +2,7 @@
 title: "Obesity Classification & Sampling Artifact Analysis"
 summary: "Trained and tuned multiple ML classifiers on a semi-synthetic obesity dataset, then used subgroup analysis to detect sampling artifacts introduced by SMOTE oversampling — revealing inflated gender-obesity associations."
 tags: [Classification, Random Forest, XGBoost, Fairness, Python]
-order: 5
+order: 6
 ---
 
 ## Overview
