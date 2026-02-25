@@ -2,7 +2,7 @@
 title: "Clinical Named Entity Recognition"
 summary: "Token-level BERT classifier that extracts disease and treatment entities from clinical text, evaluated with entity-level seqeval metrics."
 tags: [NLP, BERT, NER, Clinical, Python]
-order: 2
+order: 3
 ---
 
 ## Overview

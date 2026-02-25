@@ -2,7 +2,7 @@
 title: "CAD Detection in Clinical Notes"
 summary: "Fine-tuned Bio_ClinicalBERT with LoRA adapters to detect coronary artery disease mentions in clinical notes, using 5-fold cross-validation on MIMIC discharge summaries."
 tags: [NLP, BERT, LoRA, Clinical, Python]
-order: 1
+order: 2
 ---
 
 ## Overview
