@@ -45,7 +45,10 @@ A single homogeneous corpus would force the retriever to compete between patient
 ## System Architecture
 
 ```
-Query
+Query + Conversation History (last 3 turns)
+  │
+  ▼
+[condense_query()]  ── rewrites vague follow-ups into standalone questions
   │
   ▼
 [Intent Classifier]  ──────────────────────────────►  Canned Response
@@ -179,7 +182,8 @@ The pipeline was extracted from the exploratory notebook into `rag_pipeline.py` 
 
 - **Streaming responses** via `st.write_stream(response.response_gen)` — tokens appear as the LLM generates
 - **Retrieved sources expander** — shows source (Medline/Mayo), test name, and raw chunk text for each retrieved node
-- **Conversation history** — past Q&A pairs stored in `st.session_state.history`
+- **Conversational memory** — `condense_query()` in `rag_pipeline.py` rewrites vague follow-up questions ("what about for children?") into standalone questions using the last 3 turns of history before routing; `route_query()` accepts an optional `history` parameter and `app.py` passes `st.session_state.history` on every call
+- **Conversation history display** — past Q&A pairs rendered below the current answer (newest first); clears on page refresh
 
 **Deployment trade-off:** The `SentenceTransformerRerank` postprocessor was dropped for Streamlit Community Cloud — `sentence-transformers` depends on PyTorch (~750MB), which exceeded the platform's build constraints. `similarity_top_k` was reduced from 6 to 3 to compensate. Quality impact is low given the small, domain-focused index and metadata filtering already constraining retrieval to roughly half the index per query.
 
