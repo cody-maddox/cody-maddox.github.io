@@ -7,7 +7,7 @@ order: 1
 
 ## Overview
 
-A portfolio-level Retrieval-Augmented Generation (RAG) system built for the healthcare domain. The system answers patient and clinician questions about common laboratory tests using curated content from two authoritative sources: **MedlinePlus** (patient-education focus) and **Mayo Clinic Labs** (technical lab-handbook focus).
+A Retrieval-Augmented Generation (RAG) system built for the healthcare domain. The system answers patient and clinician questions about common laboratory tests using curated content from two authoritative sources: **MedlinePlus** (patient-education focus) and **Mayo Clinic Labs** (technical lab-handbook focus).
 
 **[Live Demo →](https://clinical-lab-assistant-xd5df9urgepwfmeqrzkmpi.streamlit.app/)**
 *(Streamlit Community Cloud — first load may be slow after inactivity)*
