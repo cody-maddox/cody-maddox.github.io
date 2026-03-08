@@ -68,6 +68,16 @@ extract_entities("Patient has diabetes treated with insulin")
 
 The function handles subword reconstruction — reassembling `##` tokens back into complete words.
 
+## Results
+
+| Metric | Score |
+|--------|-------|
+| **F1** | **83%** |
+| Precision | 80% |
+| Recall | 86% |
+
+Evaluated at the **entity level** using seqeval — partial entity matches (e.g., getting "gestational" but not "diabetes" in "gestational diabetes") do not count as correct.
+
 ## Key Design Decisions
 
 | Decision | Rationale |
