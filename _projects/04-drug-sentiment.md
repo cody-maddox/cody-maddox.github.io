@@ -2,7 +2,7 @@
 title: "Drug Review Sentiment Analysis"
 summary: "Fine-tuned BERT for binary sentiment classification on patient drug reviews, achieving 0.80 macro F1 on multi-field review text with moderate class imbalance."
 tags: [NLP, BERT, Sentiment Analysis, Biomedical, Python]
-order: 5
+order: 6
 ---
 
 ## Overview

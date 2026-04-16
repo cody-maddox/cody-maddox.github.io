@@ -2,7 +2,7 @@
 title: "MIMIC-III Clinical Note → FHIR Extraction"
 summary: "Fine-tuned LLaMA 3.1 8B on 744 MIMIC-III discharge summaries using QLoRA to extract structured FHIR-compatible JSON, achieving ~86% field-level accuracy vs. 0% base model. Includes a Power BI clinical analytics dashboard built from model predictions."
 tags: [LLM, Fine-Tuning, QLoRA, FHIR, Clinical NLP, LLaMA, MIMIC-III, HuggingFace, Power BI, Python]
-order: 11
+order: 2
 ---
 
 ## Overview

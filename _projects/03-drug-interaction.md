@@ -2,7 +2,7 @@
 title: "Drug-Drug Interaction Extraction"
 summary: "Fine-tuned BERT for relation extraction to classify drug-drug interactions from the DDI Corpus 2013, achieving 0.79 macro F1 across 5 interaction types."
 tags: [NLP, BERT, Relation Extraction, Biomedical, Python]
-order: 4
+order: 5
 ---
 
 ## Overview
